@@ -15,6 +15,14 @@ SYSTEM_PROMPT = "You are a professional customer service assistant for HDS compa
 client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 conversation_history = {}
 
+@app.route("/", methods=["GET"])
+def home():
+    return "WhatsApp Bot is running!", 200
+
+@app.route("/privacy", methods=["GET"])
+def privacy():
+    html = "<html><body><h1>Privacy Policy</h1><p>Contact: ehabeng2002@gmail.com</p></body></html>"
+    return html, 200
 
 @app.route("/webhook", methods=["GET"])
 def verify():
@@ -24,7 +32,6 @@ def verify():
     if mode == "subscribe" and token == VERIFY_TOKEN:
         return challenge, 200
     return "Forbidden", 403
-
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
@@ -58,7 +65,6 @@ def webhook():
         print(f"Error: {e}")
     return "OK", 200
 
-
 def send_whatsapp_message(to, text):
     url = f"https://graph.facebook.com/v18.0/{PHONE_NUMBER_ID}/messages"
     headers = {
@@ -73,6 +79,5 @@ def send_whatsapp_message(to, text):
     }
     requests.post(url, json=payload, headers=headers)
 
-
 if __name__ == "__main__":
-   app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
